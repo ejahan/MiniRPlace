@@ -1,0 +1,41 @@
+body {
+  background-color: #2f2f2f;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+}
+
+#canvas-container {
+  background-color: #807f7f;
+  border-radius: 10px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  display: flex;
+}
+
+td {
+  width: 20px;
+  height: 20px;
+  transition: background-color 1s;
+  transform: scale(-1, 1);
+}
+
+input[type="color"] {
+  margin-top: 10px;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+/*# sourceMappingURL=index.4690f2cf.css.map */
