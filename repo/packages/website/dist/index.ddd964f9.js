@@ -1,6 +1,12 @@
 const socket = io("http://localhost:3004");
+let ip;
 socket.on("connect", ()=>{
     socket.emit("connected", "Connected");
+});
+fetch("https://api.ipify.org?format=json").then((response)=>response.json()).then((data)=>{
+    ip = data.ip;
+}).catch((error)=>{
+    console.log("Error:", error);
 });
 socket.on("color_changed", (data)=>{
     console.log(data);
@@ -9,6 +15,8 @@ socket.on("color_changed", (data)=>{
             const cell = canvas.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
             if (cell) cell.style.backgroundColor = data[i][j];
         }
+    }).catch((error)=>{
+        console.log("Error:", error);
     });
 });
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -25,20 +33,27 @@ document.addEventListener("DOMContentLoaded", ()=>{
             cell.tabIndex = 0;
             const change_color = ()=>{
                 const color = colorPicker.value;
-                cell.style.backgroundColor = color;
-                cell.style.animation = "rotating 1s";
+                const time = Date.now();
                 fetch("http://localhost:3003/update-color", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
+                        ip,
                         row: i,
                         col: j,
-                        color
+                        color,
+                        time
                     })
-                }).then(()=>{
-                    socket.emit("message", "A color has been changed");
+                }).then((response)=>response.json()).then((res)=>{
+                    if (res.success) {
+                        cell.style.backgroundColor = color;
+                        cell.style.animation = "rotating 1s";
+                        socket.emit("message", "A color has been changed");
+                    }
+                }).catch((error)=>{
+                    console.log("Error:", error);
                 });
             };
             cell.addEventListener("keydown", (e)=>{
@@ -54,6 +69,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
             const cell = canvas1.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
             if (cell) cell.style.backgroundColor = data[i][j];
         }
+    }).catch((error)=>{
+        console.log("Error:", error);
     });
 });
 

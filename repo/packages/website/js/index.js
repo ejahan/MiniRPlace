@@ -1,8 +1,19 @@
 const socket = io('http://localhost:3004');
+let ip;
 
 socket.on('connect', () => {
     socket.emit('connected', 'Connected');
 });
+
+fetch('https://api.ipify.org?format=json')
+    .then(response => response.json())
+    .then(data => {
+        ip = data.ip;
+    })
+    .catch(error => {
+        console.log('Error:', error);
+});
+
 
 socket.on('color_changed', (data) => {
     console.log(data);
@@ -17,6 +28,9 @@ socket.on('color_changed', (data) => {
                     }
                 }
             }
+        })
+        .catch(error => {
+            console.log('Error:', error);
         });
 });
 
@@ -37,17 +51,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
           const change_color = () => {
             const color = colorPicker.value;
-            cell.style.backgroundColor = color;
-            cell.style.animation = 'rotating 1s';
+            const time = Date.now();
 
             fetch('http://localhost:3003/update-color', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ row: i, col: j, color })
+                body: JSON.stringify({ ip, row: i, col: j, color, time })
             })
-                .then(() => {
-                    socket.emit('message', 'A color has been changed');
-            });
+                .then(response => response.json())
+                .then(res => {
+                    if (res.success) {
+                        cell.style.backgroundColor = color;
+                        cell.style.animation = 'rotating 1s';
+                        socket.emit('message', 'A color has been changed');
+                    }
+                })
+                .catch(error => {
+                    console.log('Error:', error);
+                });
           }
 
           cell.addEventListener("keydown", (e) => {
@@ -72,5 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
               }
           }
+      })
+      .catch(error => {
+          console.log('Error:', error);
       });
 });
