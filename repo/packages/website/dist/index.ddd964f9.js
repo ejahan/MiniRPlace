@@ -1,3 +1,14 @@
+const socket = io("http://localhost:3004");
+socket.on("connect", ()=>{
+    console.log("Connected to WebSocket server via Socket.IO");
+    socket.emit("message", "Hello from the client!");
+});
+socket.on("message", (data)=>{
+    console.log(`Message from server: ${data}`);
+});
+socket.on("disconnect", ()=>{
+    console.log("Disconnected from WebSocket server");
+});
 document.addEventListener("DOMContentLoaded", ()=>{
     const canvas = document.getElementById("canvas");
     const colorPicker = document.getElementById("color-picker");

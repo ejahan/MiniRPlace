@@ -61,11 +61,9 @@ input[type="color"] {
 }
 input[type="color"]::-webkit-color-swatch {
   border-radius: 50%;
-  border: 7px solid #000000;
 }
 input[type="color"]::-moz-color-swatch {
   border-radius: 50%;
-  border: 7px solid #000000;
 }
 input[type="color"]:hover {
   scale: 1.1;
