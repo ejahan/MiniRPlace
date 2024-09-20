@@ -1,14 +1,15 @@
-import { Date, Response } from 'fets';
+import { Response } from 'fets';
 import { router } from '../lib/server.js';
+
+const TIME_LIMIT = 5000;
+const WIDTH = 20;
+const HEIGHT = 20;
 
 type User = {
   ip: string;
   last_time: number;
 };
 
-const TIME_LIMIT = 5000;
-const WIDTH = 20;
-const HEIGHT = 20;
 let canvas: string[][] = Array.from({ length: HEIGHT }, () => Array(WIDTH).fill('#f7f7f7'));
 let users: User[] = [];
 

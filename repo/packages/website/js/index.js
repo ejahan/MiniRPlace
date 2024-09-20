@@ -1,3 +1,6 @@
+const ROWS = 20;
+const COLS = 20;
+
 const socket = io('http://localhost:3004');
 let ip;
 
@@ -14,9 +17,7 @@ fetch('https://api.ipify.org?format=json')
         console.log('Error:', error);
 });
 
-
-socket.on('color_changed', (data) => {
-    console.log(data);
+const color_changed = () => {
     fetch('http://localhost:3003/canvas')
         .then(response => response.json())
         .then(data => {
@@ -32,20 +33,24 @@ socket.on('color_changed', (data) => {
         .catch(error => {
             console.log('Error:', error);
         });
+}
+
+
+socket.on('color_changed', (data) => {
+    console.log(data);
+    color_changed();
 });
 
 
 document.addEventListener('DOMContentLoaded', () => {
   const canvas = document.getElementById('canvas');
   const colorPicker = document.getElementById('color-picker');
-  const rows = 20;
-  const cols = 20;
 
   canvas.tabIndex = 0;
-  for (let i = 0; i < rows; i++) {
+  for (let i = 0; i < ROWS; i++) {
       const row = document.createElement('tr');
       row.tabIndex = 0;
-      for (let j = 0; j < cols; j++) {
+      for (let j = 0; j < COLS; j++) {
           const cell = document.createElement('td');
           cell.tabIndex = 0;
 
@@ -82,19 +87,5 @@ document.addEventListener('DOMContentLoaded', () => {
       canvas.appendChild(row);
   }
 
-  fetch('http://localhost:3003/canvas')
-      .then(response => response.json())
-      .then(data => {
-          for (let i = 0; i < data.length; i++) {
-              for (let j = 0; j < data[i].length; j++) {
-                  const cell = canvas.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
-                  if (cell) {
-                      cell.style.backgroundColor = data[i][j];
-                  }
-              }
-          }
-      })
-      .catch(error => {
-          console.log('Error:', error);
-      });
+  color_changed()
 });

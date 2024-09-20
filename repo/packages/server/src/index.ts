@@ -18,10 +18,6 @@ const io = new Server({
 });
 
 io.on("connection", (socket) => {
-  console.log("received connection");
-  socket.on("connected", (msg) => {
-    console.log(msg)
-  })
   socket.on("message", (msg) => {
     console.log(msg);
     socket.broadcast.emit("color_changed", "a color has been changed");

@@ -17,7 +17,6 @@ body {
   font-weight: normal;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   color: rgb(197, 198, 255);
-  padding-bottom: 15px;
 }
 
 #canvas-container {
@@ -38,9 +37,6 @@ body {
   justify-content: center;
   color: rgb(197, 198, 255);
 }
-
-/* table {
-} */
 
 td {
   width: 20px;
