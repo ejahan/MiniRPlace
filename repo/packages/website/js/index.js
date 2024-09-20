@@ -1,16 +1,23 @@
 const socket = io('http://localhost:3004');
 
 socket.on('connect', () => {
-    console.log('Connected to WebSocket server via Socket.IO');
-    socket.emit('message', 'Hello from the client!');
+    socket.emit('connected', 'Connected');
 });
 
-socket.on('message', (data) => {
-    console.log(`Message from server: ${data}`);
-});
-
-socket.on('disconnect', () => {
-    console.log('Disconnected from WebSocket server');
+socket.on('color_changed', (data) => {
+    console.log(data);
+    fetch('http://localhost:3003/canvas')
+        .then(response => response.json())
+        .then(data => {
+            for (let i = 0; i < data.length; i++) {
+                for (let j = 0; j < data[i].length; j++) {
+                    const cell = canvas.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
+                    if (cell) {
+                        cell.style.backgroundColor = data[i][j];
+                    }
+                }
+            }
+        });
 });
 
 
@@ -37,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ row: i, col: j, color })
+            })
+                .then(() => {
+                    socket.emit('message', 'A color has been changed');
             });
           }
 

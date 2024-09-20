@@ -1,20 +1,22 @@
 const socket = io("http://localhost:3004");
 socket.on("connect", ()=>{
-    console.log("Connected to WebSocket server via Socket.IO");
-    socket.emit("message", "Hello from the client!");
+    socket.emit("connected", "Connected");
 });
-socket.on("message", (data)=>{
-    console.log(`Message from server: ${data}`);
-});
-socket.on("disconnect", ()=>{
-    console.log("Disconnected from WebSocket server");
+socket.on("color_changed", (data)=>{
+    console.log(data);
+    fetch("http://localhost:3003/canvas").then((response)=>response.json()).then((data)=>{
+        for(let i = 0; i < data.length; i++)for(let j = 0; j < data[i].length; j++){
+            const cell = canvas.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
+            if (cell) cell.style.backgroundColor = data[i][j];
+        }
+    });
 });
 document.addEventListener("DOMContentLoaded", ()=>{
-    const canvas = document.getElementById("canvas");
+    const canvas1 = document.getElementById("canvas");
     const colorPicker = document.getElementById("color-picker");
     const rows = 20;
     const cols = 20;
-    canvas.tabIndex = 0;
+    canvas1.tabIndex = 0;
     for(let i = 0; i < rows; i++){
         const row = document.createElement("tr");
         row.tabIndex = 0;
@@ -35,6 +37,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
                         col: j,
                         color
                     })
+                }).then(()=>{
+                    socket.emit("message", "A color has been changed");
                 });
             };
             cell.addEventListener("keydown", (e)=>{
@@ -43,11 +47,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
             cell.addEventListener("click", change_color);
             row.appendChild(cell);
         }
-        canvas.appendChild(row);
+        canvas1.appendChild(row);
     }
     fetch("http://localhost:3003/canvas").then((response)=>response.json()).then((data)=>{
         for(let i = 0; i < data.length; i++)for(let j = 0; j < data[i].length; j++){
-            const cell = canvas.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
+            const cell = canvas1.querySelector(`tr:nth-child(${i + 1}) td:nth-child(${j + 1})`);
             if (cell) cell.style.backgroundColor = data[i][j];
         }
     });
