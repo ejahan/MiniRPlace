@@ -8,13 +8,34 @@ body {
   display: flex;
 }
 
+.title {
+  color: #ebebeb;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.explanation {
+  color: #c5c6ff;
+  padding-bottom: 15px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: normal;
+}
+
 #canvas-container {
-  background-color: #807f7f;
+  background-color: #9b9b9b;
   border-radius: 10px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 15px;
+  display: flex;
+  box-shadow: 0 0 20px 5px #1f1f1f;
+}
+
+.choose_color {
+  color: #c5c6ff;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
   display: flex;
 }
 
@@ -26,7 +47,26 @@ td {
 }
 
 input[type="color"] {
-  margin-top: 10px;
+  appearance: none;
+  cursor: pointer;
+  background-color: #0000;
+  border: none;
+  width: 50px;
+  height: 50px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+  border: 7px solid #000;
+  border-radius: 50%;
+}
+
+input[type="color"]::-moz-color-swatch {
+  border: 7px solid #000;
+  border-radius: 50%;
+}
+
+input[type="color"]:hover {
+  scale: 1.1;
 }
 
 @keyframes rotating {
